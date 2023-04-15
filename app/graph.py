@@ -19,8 +19,22 @@ class RegularGraph(Graph):
         self.components = components
 
     def generate(self):
-        # Реализуйте генерацию обычного графа здесь
-        pass
+        if self.components == 0:
+            self.components = 1
+        if self.vertices == 0:
+            self.vertices = self.components * random.randint(2, 10)
+
+        for _ in range(self.components):
+            nodes = [i for i in range(self.vertices)]
+            random.shuffle(nodes)
+
+            for i in range(len(nodes) - 1):
+                self.add_edge(nodes[i], nodes[i + 1])
+
+            if self.edges > len(nodes) - 1:
+                for _ in range(self.edges - len(nodes) + 1):
+                    n1, n2 = random.sample(nodes, 2)
+                    self.add_edge(n1, n2)
 
 class Tree(Graph):
     def __init__(self, vertices=0, leaves=0):
@@ -29,8 +43,21 @@ class Tree(Graph):
         self.leaves = leaves
 
     def generate(self):
-        # Реализуйте генерацию дерева здесь
-        pass
+        if self.vertices == 0:
+            self.vertices = random.randint(2, 10)
+
+        nodes = [i for i in range(self.vertices)]
+        random.shuffle(nodes)
+
+        for i in range(len(nodes) - 1):
+            self.add_edge(nodes[i], nodes[i + 1])
+
+        if self.leaves > 0:
+            for _ in range(self.leaves - 1):
+                leaf = random.choice(nodes)
+                new_node = max(nodes) + 1
+                self.add_edge(leaf, new_node)
+                nodes.append(new_node)
 
 class CompleteGraph(Graph):
     def __init__(self, vertices=0):
@@ -45,5 +72,11 @@ class RandomGraph(Graph):
         super().__init__()
 
     def generate(self):
-        # Реализуйте генерацию случайного графа здесь
-        pass
+        vertices = random.randint(2, 10)
+        edges = random.randint(vertices - 1, vertices * (vertices - 1) // 2)
+
+        nodes = [i for i in range(vertices)]
+
+        for _ in range(edges):
+            n1, n2 = random.sample(nodes, 2)
+            self.add_edge(n1, n2)
