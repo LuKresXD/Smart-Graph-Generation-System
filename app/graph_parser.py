@@ -1,5 +1,6 @@
 import re
 
+
 class GraphParser:
     def __init__(self, input_string):
         self.input_string = input_string
@@ -10,11 +11,22 @@ class GraphParser:
         return graph_type, parameters
 
     def get_graph_type(self, graph_string):
-        # Implement a function that identifies the graph type based on the input string
-        # For example, using regex or keyword matching
-        pass
+        graph_types = {
+            "Полный_граф": (r"полн\w*?",),
+            "Граф_вершины": (r"вершин\w*?", r"граф\w*?"),
+            "Граф_компоненты_связанности": (r"компонент\w*?", r"связанност\w*?"),
+            "Дерево_листы": (r"лист\w*?",),
+            "Дерево_вершины": (r"дерев\w*?", r"вершин\w*?"),
+            "Случайный": (r"случайн\w*?|рандомн\w*?|произвольн\w*?",)}
+
+        for key, values in graph_types.items():
+            if all(re.search(keyword, graph_string, re.IGNORECASE) for keyword in values):
+                return key
+        raise ValueError("Неизвестный тип графа")
 
     def extract_parameters(self, graph_string):
-        # Implement a function that extracts the parameters from the input string
-        # For example, using regex
-        pass
+        pattern = r'\d+'
+        matches = re.findall(pattern, graph_string)
+        if matches:
+            return {"num": int(matches[0])}
+        return {}
